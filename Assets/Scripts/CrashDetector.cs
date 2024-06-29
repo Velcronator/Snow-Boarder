@@ -7,7 +7,9 @@ public class CrashDetector : MonoBehaviour
 {
     [SerializeField] private float reloadDelay = 2.0f;
     [SerializeField] private ParticleSystem particleEffect;
+    [SerializeField] private AudioClip audioClip;
 
+    [Header("Sprite Parts")]
     [SerializeField] private GameObject[] spriteParts; // Assign the sprite parts in the inspector
     [SerializeField] private float separationForce = 5f; // Force applied to each part
 
@@ -15,7 +17,7 @@ public class CrashDetector : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (collision.gameObject.CompareTag("Ground") || collision.gameObject.CompareTag("Obstacles"))
         {
             TriggerParticleEffect();
             SeparateParts();
@@ -26,6 +28,7 @@ public class CrashDetector : MonoBehaviour
     private void TriggerParticleEffect()
     {
         // stop the transform of the object and play the particle effect
+        GetComponent<AudioSource>().PlayOneShot(audioClip);
         GetComponent<Rigidbody2D>().simulated = false;
         particleEffect.Play();
     }
